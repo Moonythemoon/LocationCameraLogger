@@ -2,27 +2,27 @@
 
 A React Native mobile app built with Expo that allows users to capture photos with GPS location data and save them as log entries.
 
-## 📱 Features
+## Features
 
-- **GPS Location Tracking**: Get current location coordinates
-- **Camera Integration**: Take photos using device camera
-- **Log Management**: Save and view photo + location combinations
-- **Earth Tone Design**: Beautiful brown and tan color scheme
-- **Permission Handling**: Automatic location and camera permission requests
+- GPS Location Tracking: Get current location coordinates
+- Camera Integration: Take photos using device camera
+- Log Management: Save and view photo + location combinations
+- Earth Tone Design: Brown and tan color scheme
+- Permission Handling: Automatic location and camera permission requests
 
-## 🛠️ Prerequisites
+## Prerequisites
 
 Before running this app, make sure you have:
 
-- **Node.js** (version 16 or higher)
-- **Expo Go app** installed on your mobile device
-- **VS Code** or any code editor
+- Node.js (version 16 or higher)
+- Expo Go app installed on your mobile device
+- VS Code or any code editor
 
-## 📦 Installation
+## Installation
 
 ### Step 1: Clone the Repository
 ```bash
-git clone [YOUR_REPOSITORY_URL]
+git clone https://github.com/Moonythemoon/LocationCameraLogger.git
 cd LocationCameraLogger
 ```
 
@@ -37,18 +37,18 @@ npx expo start --tunnel
 ```
 
 ### Step 4: Run on Your Phone
-1. Open **Expo Go** app on your phone
+1. Open Expo Go app on your phone
 2. Scan the QR code displayed in your terminal
 3. Grant location and camera permissions when prompted
 
-## 🎯 How to Use
+## How to Use
 
-1. **Get Location**: Tap "Get Current Location" to retrieve GPS coordinates
-2. **Take Photo**: Tap "Take Photo" to capture an image
-3. **Save Log**: Tap "Save Log Entry" to store the photo + location combination
-4. **View Logs**: Scroll down to see all saved entries with timestamps
+1. Get Location: Tap "Get Current Location" to retrieve GPS coordinates
+2. Take Photo: Tap "Take Photo" to capture an image
+3. Save Log: Tap "Save Log Entry" to store the photo + location combination
+4. View Logs: Scroll down to see all saved entries with timestamps
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 LocationCameraLogger/
@@ -58,39 +58,39 @@ LocationCameraLogger/
 └── README.md             # This file
 ```
 
-## 🔧 Dependencies
+## Dependencies
 
-- **expo**: ~53.0.17
-- **expo-location**: Location services
-- **expo-image-picker**: Camera functionality
-- **react**: 19.0.0
-- **react-native**: 0.79.5
+- expo: ~53.0.17
+- expo-location: Location services
+- expo-image-picker: Camera functionality
+- react: 19.0.0
+- react-native: 0.79.5
 
-## 🎨 Design
+## Design
 
 The app uses an earth tone color palette:
 - Primary Browns: #8B4513, #8B7355, #654321
 - Secondary Tans: #D2B48C, #F5F5DC, #DEB887
 - Accent: #A0522D
 
-## ⚠️ Important Notes
+## Important Notes
 
-- **Permissions**: The app requires location and camera permissions to function
-- **Data Storage**: All logs are stored in memory and reset when the app restarts
-- **Network**: Uses OpenStreetMap for location display (no API key required)
-- **Platform**: Tested on iOS and Android using Expo Go
+- Permissions: The app requires location and camera permissions to function
+- Data Storage: All logs are stored in memory and reset when the app restarts
+- Network: Uses OpenStreetMap for location display (no API key required)
+- Platform: Tested on iOS and Android using Expo Go
 
-## 🚀 Lab Exercise Completion
+## Lab Exercise Completion
 
 This app fulfills all requirements of the Location & Camera Logger lab exercise:
 
-✅ **Part 1**: Expo project setup with required dependencies  
-✅ **Part 2**: Location retrieval with permission handling  
-✅ **Part 3**: Static map display using OpenStreetMap  
-✅ **Part 4**: Camera integration with photo capture  
-✅ **Part 5**: Save and view logs functionality  
+- Part 1: Expo project setup with required dependencies
+- Part 2: Location retrieval with permission handling
+- Part 3: Static map display using OpenStreetMap
+- Part 4: Camera integration with photo capture
+- Part 5: Save and view logs functionality
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### App shows white screen:
 ```bash
@@ -108,7 +108,7 @@ npm install
 npx expo start --tunnel
 ```
 
-## 👨‍🏫 For Teachers
+## For Teachers
 
 This project demonstrates:
 - React Native fundamentals
@@ -118,7 +118,7 @@ This project demonstrates:
 - Component-based architecture
 - Mobile UI/UX design principles
 
-## 📱 Demo
+## Demo
 
 The app successfully:
 - Requests and handles location permissions
@@ -132,5 +132,5 @@ The app successfully:
 
 ---
 
-**Created for React Native Lab Exercise**  
-**Estimated completion time: 90-120 minutes**
+Created for React Native Lab Exercise
+Estimated completion time: 90-120 minutes
