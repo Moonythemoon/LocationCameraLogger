@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 
 export default function LocationPicker({ onLocationPicked, currentLocation }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [mapError, setMapError] = useState(false);
 
   const verifyPermissions = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -33,10 +34,12 @@ export default function LocationPicker({ onLocationPicked, currentLocation }) {
         lng: location.coords.longitude,
       };
 
+      console.log('Location picked:', pickedLocation);
+      setMapError(false); // Reset map error when getting new location
       onLocationPicked(pickedLocation);
     } catch (error) {
+      console.log('Location error:', error);
       Alert.alert('Error', 'Could not fetch location. Please try again.');
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -47,26 +50,48 @@ export default function LocationPicker({ onLocationPicked, currentLocation }) {
   );
 
   if (currentLocation) {
-    // Using OpenStreetMap static image (free alternative)
-    const mapPreviewUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${currentLocation.lat},${currentLocation.lng}&zoom=14&size=400x200&markers=${currentLocation.lat},${currentLocation.lng},red`;
-    
-    locationContent = (
-      <View>
-        <Image
-          style={styles.mapImage}
-          source={{ uri: mapPreviewUrl }}
-          resizeMode="cover"
-        />
-        <View style={styles.coordinatesContainer}>
-          <Text style={styles.coordinatesText}>
-            📍 Lat: {currentLocation.lat.toFixed(6)}
+    if (mapError) {
+      // Show coordinates without map when map fails to load
+      locationContent = (
+        <View style={styles.coordinatesOnlyContainer}>
+          <Text style={styles.coordinatesTitle}>📍 Location Coordinates</Text>
+          <Text style={styles.coordinatesLarge}>
+            {currentLocation.lat.toFixed(6)}, {currentLocation.lng.toFixed(6)}
           </Text>
-          <Text style={styles.coordinatesText}>
-            📍 Lng: {currentLocation.lng.toFixed(6)}
-          </Text>
+          <Text style={styles.mapErrorText}>Map preview unavailable</Text>
         </View>
-      </View>
-    );
+      );
+    } else {
+      const googleMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${currentLocation.lat},${currentLocation.lng}&zoom=14&size=400x200&markers=color:red%7C${currentLocation.lat},${currentLocation.lng}&key=AIzaSyA6pUYsMdYP9Hr_rsFPzdfnKrDdYQQDZtE`;
+      
+      console.log('Google Maps URL:', googleMapUrl);
+      
+      locationContent = (
+        <View>
+          <Image
+            style={styles.mapImage}
+            source={{ uri: googleMapUrl }}
+            resizeMode="cover"
+            onError={(error) => {
+              console.log('Map failed to load:', error.nativeEvent);
+              setMapError(true);
+            }}
+            onLoad={() => {
+              console.log('Map loaded successfully!');
+              setMapError(false);
+            }}
+          />
+          <View style={styles.coordinatesContainer}>
+            <Text style={styles.coordinatesText}>
+              Lat: {currentLocation.lat.toFixed(6)}
+            </Text>
+            <Text style={styles.coordinatesText}>
+              Lng: {currentLocation.lng.toFixed(6)}
+            </Text>
+          </View>
+        </View>
+      );
+    }
   }
 
   return (
@@ -75,14 +100,12 @@ export default function LocationPicker({ onLocationPicked, currentLocation }) {
         {locationContent}
       </View>
       
-      <View style={styles.buttonContainer}>
-        <Button
-          title={isLoading ? "Getting Location..." : "Get Current Location"}
-          onPress={getLocationHandler}
-          disabled={isLoading}
-          color="#8B4513"
-        />
-      </View>
+      <Button
+        title={isLoading ? "Getting Location..." : "Get Current Location"}
+        onPress={getLocationHandler}
+        disabled={isLoading}
+        color="#8B4513"
+      />
     </View>
   );
 }
@@ -95,12 +118,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     marginBottom: 15,
-    borderColor: '#D2B48C', // Tan border
+    borderColor: '#D2B48C',
     borderWidth: 2,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5DC', // Beige background
+    backgroundColor: '#F5F5DC',
   },
   mapImage: {
     width: '100%',
@@ -118,7 +141,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(139, 115, 85, 0.9)', // Semi-transparent earth brown
+    backgroundColor: 'rgba(139, 115, 85, 0.9)',
     padding: 8,
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
@@ -129,7 +152,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  buttonContainer: {
-    marginTop: 5,
+  coordinatesOnlyContainer: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  coordinatesTitle: {
+    fontSize: 18,
+    color: '#654321',
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  coordinatesLarge: {
+    fontSize: 16,
+    color: '#8B4513',
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  mapErrorText: {
+    fontSize: 12,
+    color: '#A0522D',
+    fontStyle: 'italic',
   },
 });

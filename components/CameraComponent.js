@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, Image, Button, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function CameraComponent({ onPhotaTaken, currentPhoto }) {
+export default function CameraComponent({ onPhotoTaken, currentPhoto }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const openCamera = async () => {
-    // Request camera permissions
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission Denied', 'Camera access is required.');
@@ -23,29 +22,23 @@ export default function CameraComponent({ onPhotaTaken, currentPhoto }) {
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        onPhotaTaken(result.assets[0].uri);
+        onPhotoTaken(result.assets[0].uri);
       }
     } catch (error) {
-      Alert.alert('Error', 'Could not take photo. Please try again.');
+      Alert.alert('Error', 'Could not take photo.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  let photoContent = (
-    <Text style={styles.placeholder}>No photo taken yet</Text>
-  );
-
-  if (currentPhoto) {
-    photoContent = (
-      <Image source={{ uri: currentPhoto }} style={styles.image} />
-    );
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.preview}>
-        {photoContent}
+        {currentPhoto ? (
+          <Image source={{ uri: currentPhoto }} style={styles.image} />
+        ) : (
+          <Text style={styles.placeholder}>No photo taken yet</Text>
+        )}
       </View>
       <Button
         title={isLoading ? "Opening Camera..." : "Take Photo"}
