@@ -12,8 +12,6 @@ A React Native mobile app built with Expo that allows users to capture photos wi
 
 ## Prerequisites
 
-Before running this app, make sure you have:
-
 - Node.js (version 16 or higher)
 - Expo Go app installed on your mobile device
 - VS Code or any code editor
@@ -66,12 +64,7 @@ LocationCameraLogger/
 - react: 19.0.0
 - react-native: 0.79.5
 
-## Design
 
-The app uses an earth tone color palette:
-- Primary Browns: #8B4513, #8B7355, #654321
-- Secondary Tans: #D2B48C, #F5F5DC, #DEB887
-- Accent: #A0522D
 
 ## Important Notes
 
@@ -80,15 +73,6 @@ The app uses an earth tone color palette:
 - Network: Uses OpenStreetMap for location display (no API key required)
 - Platform: Tested on iOS and Android using Expo Go
 
-## Lab Exercise Completion
-
-This app fulfills all requirements of the Location & Camera Logger lab exercise:
-
-- Part 1: Expo project setup with required dependencies
-- Part 2: Location retrieval with permission handling
-- Part 3: Static map display using OpenStreetMap
-- Part 4: Camera integration with photo capture
-- Part 5: Save and view logs functionality
 
 ## Troubleshooting
 
@@ -108,29 +92,5 @@ npm install
 npx expo start --tunnel
 ```
 
-## For Teachers
 
-This project demonstrates:
-- React Native fundamentals
-- Expo development workflow
-- Mobile permissions handling
-- State management with hooks
-- Component-based architecture
-- Mobile UI/UX design principles
 
-## Demo
-
-The app successfully:
-- Requests and handles location permissions
-- Retrieves GPS coordinates with high accuracy
-- Displays location data to the user
-- Requests and handles camera permissions
-- Launches device camera for photo capture
-- Saves photos with location metadata
-- Displays saved logs with timestamps
-- Uses responsive design for mobile devices
-
----
-
-Created for React Native Lab Exercise
-Estimated completion time: 90-120 minutes
