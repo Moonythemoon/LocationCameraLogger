@@ -12,15 +12,18 @@ import {
 export default function LogsList({ logs }) {
   const [selectedLog, setSelectedLog] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [mapError, setMapError] = useState(false);
 
   const openLogDetail = (log) => {
     setSelectedLog(log);
     setModalVisible(true);
+    setMapError(false); // Reset map error when opening modal
   };
 
   const closeModal = () => {
     setModalVisible(false);
     setSelectedLog(null);
+    setMapError(false);
   };
 
   if (logs.length === 0) {
@@ -43,8 +46,12 @@ export default function LogsList({ logs }) {
           onPress={() => openLogDetail(log)}
         >
           <View style={styles.logContent}>
-            {log.photo && (
+            {log.photo ? (
               <Image source={{ uri: log.photo }} style={styles.thumbnail} />
+            ) : (
+              <View style={styles.noPhotoThumbnail}>
+                <Text style={styles.noPhotoText}>📍</Text>
+              </View>
             )}
             
             <View style={styles.logInfo}>
@@ -53,13 +60,12 @@ export default function LogsList({ logs }) {
               {log.location && (
                 <View>
                   <Text style={styles.locationText}>
-                    📍 {log.location.lat.toFixed(4)}, {log.location.lng.toFixed(4)}
+                    Latitude: {log.location.lat.toFixed(4)}
+                  </Text>
+                  <Text style={styles.locationText}>
+                    Longitude: {log.location.lng.toFixed(4)}
                   </Text>
                 </View>
-              )}
-              
-              {!log.location && !log.photo && (
-                <Text style={styles.noDataText}>No data available</Text>
               )}
               
               <Text style={styles.tapHint}>Tap to view details</Text>
@@ -79,7 +85,7 @@ export default function LogsList({ logs }) {
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Log Details</Text>
             <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-              <Text style={styles.closeButtonText}>✕ Close</Text>
+              <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
 
@@ -91,7 +97,7 @@ export default function LogsList({ logs }) {
 
               {selectedLog.photo && (
                 <View style={styles.modalSection}>
-                  <Text style={styles.modalSectionTitle}>📷 Photo</Text>
+                  <Text style={styles.modalSectionTitle}>Photo</Text>
                   <Image
                     source={{ uri: selectedLog.photo }}
                     style={styles.fullImage}
@@ -101,7 +107,7 @@ export default function LogsList({ logs }) {
 
               {selectedLog.location && (
                 <View style={styles.modalSection}>
-                  <Text style={styles.modalSectionTitle}>📍 Location</Text>
+                  <Text style={styles.modalSectionTitle}>Location</Text>
                   <Text style={styles.modalCoordinates}>
                     Latitude: {selectedLog.location.lat.toFixed(6)}
                   </Text>
@@ -109,14 +115,31 @@ export default function LogsList({ logs }) {
                     Longitude: {selectedLog.location.lng.toFixed(6)}
                   </Text>
                   
-                  {/* Show map if location exists */}
-                  <Image
-                    style={styles.modalMap}
-                    source={{
-                      uri: `https://staticmap.openstreetmap.de/staticmap.php?center=${selectedLog.location.lat},${selectedLog.location.lng}&zoom=14&size=400x200&markers=${selectedLog.location.lat},${selectedLog.location.lng},red`
-                    }}
-                    resizeMode="cover"
-                  />
+                  {mapError ? (
+                    <View style={styles.mapFallback}>
+                      <Text style={styles.mapFallbackTitle}>📍 Location</Text>
+                      <Text style={styles.mapFallbackCoords}>
+                        {selectedLog.location.lat.toFixed(6)}, {selectedLog.location.lng.toFixed(6)}
+                      </Text>
+                      <Text style={styles.mapFallbackText}>Map preview unavailable</Text>
+                    </View>
+                  ) : (
+                    <Image
+                      style={styles.modalMap}
+                      source={{
+                        uri: `https://maps.googleapis.com/maps/api/staticmap?center=${selectedLog.location.lat},${selectedLog.location.lng}&zoom=14&size=400x200&markers=color:red%7C${selectedLog.location.lat},${selectedLog.location.lng}&key=AIzaSyA6pUYsMdYP9Hr_rsFPzdfnKrDdYQQDZtE`
+                      }}
+                      resizeMode="cover"
+                      onError={() => {
+                        console.log('Map failed to load in modal');
+                        setMapError(true);
+                      }}
+                      onLoad={() => {
+                        console.log('Map loaded successfully in modal');
+                        setMapError(false);
+                      }}
+                    />
+                  )}
                 </View>
               )}
             </View>
@@ -148,7 +171,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   logItem: {
-    backgroundColor: '#DEB887', // Burlywood
+    backgroundColor: '#DEB887',
     marginBottom: 10,
     borderRadius: 8,
     padding: 12,
@@ -169,6 +192,22 @@ const styles = StyleSheet.create({
     marginRight: 12,
     backgroundColor: '#F5F5DC',
   },
+  noPhotoThumbnail: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 12,
+    backgroundColor: '#F5F5DC',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#D2B48C',
+    borderStyle: 'dashed',
+  },
+  noPhotoText: {
+    fontSize: 24,
+    color: '#8B7355',
+  },
   logInfo: {
     flex: 1,
   },
@@ -182,11 +221,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#8B4513',
     marginBottom: 2,
-  },
-  noDataText: {
-    fontSize: 12,
-    color: '#A0522D',
-    fontStyle: 'italic',
   },
   tapHint: {
     fontSize: 10,
@@ -259,5 +293,32 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 8,
     marginTop: 10,
+  },
+  mapFallback: {
+    backgroundColor: '#F5F5DC',
+    padding: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+    borderWidth: 2,
+    borderColor: '#D2B48C',
+    borderStyle: 'dashed',
+  },
+  mapFallbackTitle: {
+    fontSize: 18,
+    color: '#654321',
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  mapFallbackCoords: {
+    fontSize: 16,
+    color: '#8B4513',
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  mapFallbackText: {
+    fontSize: 12,
+    color: '#A0522D',
+    fontStyle: 'italic',
   },
 });
